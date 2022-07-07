@@ -1,0 +1,15 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:5.0 AS build-env
+WORKDIR /app
+
+#coping the csproj version
+COPY *.csproj ./
+RUN dotnet restore
+
+COPY . ./
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:5.0
+WORKDIR /app
+EXPOSE 80
+
+COPY --from=build-env /app/out .
+ENRYPOINT ["dotnet","Authentications_TEST.dll"]
